@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Super Chat CUL</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-light bg-light mt-2">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="https://q10storage.blob.core.windows.net/q10academico-public/191506550762/191506550762.png"
+                     alt="" width="200" class="d-inline-block align-text-top">
+            </a>
+        </div>
+    </nav>
+
+    <div class="row mt-2">
+        <div class="col-12">
+            <textarea name="messages" id="messages" cols="30" rows="12" class="form-control" readonly></textarea>
+        </div>
+    </div>
+
+    <div class="row mt-2">
+        <div class="col-12 col-md-3 mb-3">
+            <input type="text" name="name" id="name" class="form-control" placeholder="Tu nombre" autocomplete="off">
+        </div>
+        <div class="col-12 col-md-8 mb-3">
+            <input type="text" name="msg" id="msg" class="form-control" placeholder="Mensaje" autocomplete="off">
+        </div>
+        <div class="col-12 col-md-1 mb-3">
+            <div class="d-grid gap-1">
+                <button class="btn btn-primary" id="btnEnviar">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+    const socket = io();
+
+    const name = document.getElementById('name');
+    const msg = document.getElementById('msg');
+
+    document.getElementById('btnEnviar').addEventListener('click', (e) => {
+        e.preventDefault();
+
+        if (name.value && msg.value) {
+            socket.emit('new-msg', {
+                name: name.value,
+                msg: msg.value
+            });
+            msg.value = '';
+        }
+    });
+
+    socket.on('new-msg', (datos) => {
+        const msgs = document.getElementById('messages');
+        const text = `💬${datos.name} : ${datos.msg}\n`;
+        msgs.append(text);
+    });
+
+</script>
+
+</body>
+</html>
